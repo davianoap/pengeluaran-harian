@@ -2,8 +2,6 @@
 
 import { db } from "@/db";
 import { transactions } from "@/db/schema";
-import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { eq } from "drizzle-orm";
 
@@ -24,20 +22,14 @@ function getLocalDateWIB(): string {
 }
 
 export async function addTransaction(amount: number, description: string, fundSource: string) {
-  const session = await auth.api.getSession({
-    headers: await headers()
-  });
-
-  if (!session) {
-    throw new Error("Unauthorized");
-  }
+  const DEFAULT_USER_ID = "default_user";
 
   const category = detectCategory(description);
   const date = getLocalDateWIB();
 
   await db.insert(transactions).values({
     id: crypto.randomUUID(),
-    userId: session.user.id,
+    userId: DEFAULT_USER_ID,
     amount,
     description: description || "Pengeluaran",
     category,
@@ -50,13 +42,6 @@ export async function addTransaction(amount: number, description: string, fundSo
 }
 
 export async function updateTransaction(id: string, amount: number, description: string, fundSource: string) {
-  const session = await auth.api.getSession({
-    headers: await headers()
-  });
-
-  if (!session) {
-    throw new Error("Unauthorized");
-  }
 
   const category = detectCategory(description);
 
@@ -75,13 +60,6 @@ export async function updateTransaction(id: string, amount: number, description:
 }
 
 export async function deleteTransaction(id: string) {
-  const session = await auth.api.getSession({
-    headers: await headers()
-  });
-
-  if (!session) {
-    throw new Error("Unauthorized");
-  }
 
   await db.delete(transactions).where(eq(transactions.id, id));
 

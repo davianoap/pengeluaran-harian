@@ -2,13 +2,11 @@
 
 import { useState } from "react";
 import { addTransaction, updateTransaction, deleteTransaction } from "./actions";
-import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Link from "next/link";
 import { Pencil, Trash2 } from "lucide-react";
 
@@ -30,7 +28,7 @@ const formatDate = (dateString: string) => {
   }).format(new Date(dateString));
 };
 
-export default function DashboardClient({ user, transactions, todayTotal }: { user: any, transactions: any[], todayTotal: number }) {
+export default function DashboardClient({ transactions, todayTotal }: { transactions: any[], todayTotal: number }) {
   const [open, setOpen] = useState(false);
   const [amount, setAmount] = useState("");
   const [description, setDescription] = useState("");
@@ -86,11 +84,6 @@ export default function DashboardClient({ user, transactions, todayTotal }: { us
     }
   };
 
-  const handleLogout = async () => {
-    await authClient.signOut();
-    router.push("/login");
-  };
-
   // Format currency with standard notation
   const formatIDR = (value: number) => {
     return new Intl.NumberFormat('id-ID', {
@@ -111,18 +104,11 @@ export default function DashboardClient({ user, transactions, todayTotal }: { us
       <header className="relative px-6 pt-12 pb-8 z-10">
         <div className="flex justify-between items-center mb-10">
           <div className="flex items-center gap-4">
-            <Avatar onClick={handleLogout} className="w-12 h-12 ring-2 ring-primary/30 cursor-pointer hover:ring-primary transition-all duration-300 shadow-xl">
-              <AvatarImage src={user.image} />
-              <AvatarFallback className="bg-primary/20 text-primary font-semibold">{user.name?.[0]?.toUpperCase()}</AvatarFallback>
-            </Avatar>
             <div>
               <p className="text-sm font-medium text-muted-foreground">Halo,</p>
-              <h1 className="text-xl font-bold tracking-tight">{user.name}</h1>
+              <h1 className="text-xl font-bold tracking-tight">Pengguna</h1>
             </div>
           </div>
-          <Button variant="ghost" size="icon" className="rounded-full bg-white/5 hover:bg-white/10" onClick={handleLogout}>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
-          </Button>
         </div>
         
         <div className="glass-panel p-8 rounded-3xl relative overflow-hidden group">

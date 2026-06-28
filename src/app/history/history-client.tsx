@@ -18,7 +18,7 @@ const formatNumber = (value: string): string => {
 };
 const parseNumber = (value: string): number => Number(value.replace(/\./g, ""));
 
-export default function HistoryClient({ user, initialTransactions }: { user: any, initialTransactions: any[] }) {
+export default function HistoryClient({ initialTransactions }: { initialTransactions: any[] }) {
   const [filter, setFilter] = useState("Semua");
   const [fundSourceFilter, setFundSourceFilter] = useState("Semua");
   
