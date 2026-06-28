@@ -6,6 +6,11 @@ import { transactions } from "@/db/schema";
 import { eq, desc } from "drizzle-orm";
 import DashboardClient from "./dashboard-client";
 
+// Mendapatkan tanggal lokal WIB (Asia/Jakarta)
+function getLocalDateWIB(): string {
+  return new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Jakarta' });
+}
+
 export default async function Home() {
   const session = await auth.api.getSession({
     headers: await headers()
@@ -22,7 +27,7 @@ export default async function Home() {
     limit: 10
   });
 
-  const today = new Date().toISOString().split('T')[0];
+  const today = getLocalDateWIB();
   const todayTotal = userTransactions
     .filter(t => t.date === today)
     .reduce((sum, t) => sum + t.amount, 0);

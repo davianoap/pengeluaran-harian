@@ -21,14 +21,33 @@ const parseNumber = (value: string): number => Number(value.replace(/\./g, ""));
 export default function HistoryClient({ user, initialTransactions }: { user: any, initialTransactions: any[] }) {
   const [filter, setFilter] = useState("Semua");
   const [fundSourceFilter, setFundSourceFilter] = useState("Semua");
+  
+  // Date Range state
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  
   const filterOptions = ["Semua", "Makanan", "Transport", "Belanja", "Hiburan", "Tagihan", "Lainnya"];
   const fundSourceOptions = ["Semua", ...CATEGORIES];
 
   const filteredTransactions = initialTransactions.filter(t => {
     const matchCategory = filter === "Semua" || t.category === filter;
     const matchFundSource = fundSourceFilter === "Semua" || (t.fundSource || "Debit") === fundSourceFilter;
-    return matchCategory && matchFundSource;
+    
+    // Date filtering logic
+    let matchDate = true;
+    if (startDate && endDate) {
+      matchDate = t.date >= startDate && t.date <= endDate;
+    } else if (startDate) {
+      matchDate = t.date >= startDate;
+    } else if (endDate) {
+      matchDate = t.date <= endDate;
+    }
+
+    return matchCategory && matchFundSource && matchDate;
   });
+
+  // Calculate total for filtered transactions
+  const totalFiltered = filteredTransactions.reduce((sum, t) => sum + t.amount, 0);
 
   // Group by date
   const grouped = filteredTransactions.reduce((acc, t) => {
@@ -104,6 +123,34 @@ export default function HistoryClient({ user, initialTransactions }: { user: any
       </header>
 
       <main className="px-6 relative z-10 space-y-4">
+        {/* Total Summary */}
+        <div className="glass-panel p-6 rounded-3xl bg-gradient-to-br from-primary/10 to-transparent border border-white/10 mb-6">
+          <p className="text-sm font-semibold text-muted-foreground mb-1">Total Pengeluaran (Filter)</p>
+          <h2 className="text-3xl font-bold tracking-tight text-white">{formatIDR(totalFiltered)}</h2>
+        </div>
+
+        {/* Date Range Filter */}
+        <div className="grid grid-cols-2 gap-4 mb-4">
+          <div>
+            <p className="text-xs font-semibold text-muted-foreground mb-2 ml-1">Dari Tanggal</p>
+            <Input 
+              type="date" 
+              value={startDate} 
+              onChange={(e) => setStartDate(e.target.value)}
+              className="h-12 bg-black/20 border-white/10 rounded-2xl focus-visible:ring-primary text-sm"
+            />
+          </div>
+          <div>
+            <p className="text-xs font-semibold text-muted-foreground mb-2 ml-1">Sampai Tanggal</p>
+            <Input 
+              type="date" 
+              value={endDate} 
+              onChange={(e) => setEndDate(e.target.value)}
+              className="h-12 bg-black/20 border-white/10 rounded-2xl focus-visible:ring-primary text-sm"
+            />
+          </div>
+        </div>
+
         {/* Category Filters */}
         <div>
           <p className="text-xs font-semibold text-muted-foreground mb-2 ml-1">Kategori</p>

@@ -18,6 +18,11 @@ function detectCategory(description: string): string {
   return "Lainnya";
 }
 
+// Mendapatkan tanggal lokal WIB (Asia/Jakarta)
+function getLocalDateWIB(): string {
+  return new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Jakarta' });
+}
+
 export async function addTransaction(amount: number, description: string, fundSource: string) {
   const session = await auth.api.getSession({
     headers: await headers()
@@ -28,7 +33,7 @@ export async function addTransaction(amount: number, description: string, fundSo
   }
 
   const category = detectCategory(description);
-  const date = new Date().toISOString().split('T')[0]; // Hari ini (lokal server UTC, bisa disesuaikan ke timezone user)
+  const date = getLocalDateWIB();
 
   await db.insert(transactions).values({
     id: crypto.randomUUID(),
