@@ -22,6 +22,14 @@ const formatNumber = (value: string): string => {
 };
 const parseNumber = (value: string): number => Number(value.replace(/\./g, ""));
 
+const formatDate = (dateString: string) => {
+  return new Intl.DateTimeFormat('id-ID', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric'
+  }).format(new Date(dateString));
+};
+
 export default function DashboardClient({ user, transactions, todayTotal }: { user: any, transactions: any[], todayTotal: number }) {
   const [open, setOpen] = useState(false);
   const [amount, setAmount] = useState("");
@@ -160,7 +168,7 @@ export default function DashboardClient({ user, transactions, todayTotal }: { us
                       </div>
                       <div>
                         <p className="font-semibold text-base mb-0.5">{t.description || t.category}</p>
-                        <div className="flex gap-2">
+                        <div className="flex gap-2 mb-1">
                           <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-primary/10 text-primary">
                             {t.category}
                           </span>
@@ -168,6 +176,7 @@ export default function DashboardClient({ user, transactions, todayTotal }: { us
                             {t.fundSource || 'Debit'}
                           </span>
                         </div>
+                        <p className="text-[10px] text-muted-foreground">{formatDate(t.date)}</p>
                       </div>
                     </div>
                     <div className="font-bold text-lg text-foreground tracking-tight">
