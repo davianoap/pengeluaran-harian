@@ -200,7 +200,7 @@ export default function HistoryClient({ user, initialTransactions }: { user: any
               <p className="text-sm text-muted-foreground">Tidak ditemukan transaksi untuk filter ini.</p>
             </div>
           ) : (
-            Object.entries(grouped).sort((a, b) => new Date(b[0]).getTime() - new Date(a[0]).getTime()).map(([date, ts]) => (
+            Object.entries(grouped).sort((a, b) => new Date(b[0]).getTime() - new Date(a[0]).getTime()).map(([date, ts]: [string, any[]]) => (
               <div key={date} className="space-y-3">
                 <h3 className="text-sm font-semibold text-muted-foreground sticky top-0 bg-background/80 backdrop-blur py-2 z-10">
                   {formatDate(date)}
