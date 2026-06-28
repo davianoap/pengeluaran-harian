@@ -8,6 +8,8 @@ function getLocalDateWIB(): string {
   return new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Jakarta' });
 }
 
+export const dynamic = 'force-dynamic';
+
 export default async function Home() {
   const DEFAULT_USER_ID = "default_user";
 

@@ -3,6 +3,8 @@ import { transactions } from "@/db/schema";
 import { eq, desc } from "drizzle-orm";
 import HistoryClient from "./history-client";
 
+export const dynamic = 'force-dynamic';
+
 export default async function HistoryPage() {
   const DEFAULT_USER_ID = "default_user";
 
