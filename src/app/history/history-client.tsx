@@ -54,7 +54,7 @@ export default function HistoryClient({ user, initialTransactions }: { user: any
     if (!acc[t.date]) acc[t.date] = [];
     acc[t.date].push(t);
     return acc;
-  }, {} as Record<string, typeof initialTransactions>);
+  }, {} as Record<string, any[]>);
 
   const formatIDR = (value: number) => {
     return new Intl.NumberFormat('id-ID', {
